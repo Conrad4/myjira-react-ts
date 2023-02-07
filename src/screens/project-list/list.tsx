@@ -1,6 +1,6 @@
 import React from "react";
 
-export const List2 = ({ lists: , users }) => {
+export const List2 = ({ lists:  , users }) => {
   //   return (
   //   <div>
   //     <table>
