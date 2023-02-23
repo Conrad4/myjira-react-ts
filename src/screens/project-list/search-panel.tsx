@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface User {
   id: string;
   name: string;
@@ -11,7 +13,7 @@ interface SearchPanelProps {
     name: string;
     personId: string;
   };
-  // 一个函数的类型，
+  // 一个函数的类型，为空 () => void
   setParam: (param: SearchPanelProps['param']) => void;
 }
 
@@ -43,9 +45,13 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
       >
         <option value={""}>负责人</option>
         {/* 这里map后面不能写大括号，或者写了大括号就要写return，这是map函数的原因  */}
-        {users.map((item, index) => {
+        {/* {users.map((item, index) => {
           return <option value={item.id}>{item.name}</option>
-        })}
+        })} */}
+
+        {users.map((item, index) => 
+           <option value={item.id}>{item.name}</option>
+        )}
       </select>
     </div>
   );
