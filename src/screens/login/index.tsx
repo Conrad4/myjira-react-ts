@@ -1,17 +1,30 @@
 import React, { FormEvent, useState } from "react";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface LoginFormProps {
   onSubmit: (username: string, password: string) => void;
 }
 // interface和type区别是什么？
-export const LoginScreen = ({ onSubmit }: LoginFormProps) => {
+export const LoginScreen = () => {
+  const login = (param: { username: string; password: string }) => {
+    fetch(`${apiUrl}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(param),
+    }).then(async (response) => {
+      if (response.ok) {
+      }
+    });
+  };
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(username, password);
+    login({ username, password });
   }
   return (
     <form onSubmit={handleSubmit}>
