@@ -1,6 +1,9 @@
 import React, { ReactNode, useContext, useState } from "react";
+// 为什么需要重命名auth，因为在这个context组件也有login方法，为了区分在auth-provider里面和这个里面的login方法
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-panel";
+import { http } from "utils/http";
+import { useMount } from 'utils';
 
 interface AuthForm {
   username: string;
@@ -11,6 +14,16 @@ interface IAuthContext {
   login: (form: AuthForm) => Promise<void>;
   register: (form: AuthForm) => Promise<void>;
   logout: () => Promise<void>;
+}
+
+const bootstrapUser = async () => {
+  let user;
+  const token = auth.getToken();
+  if (token) {
+    const data = await http("me", { token });
+    user = data.user;
+  }
+  return user;
 }
 // <IAuthContext | undefined>
 const AuthContext = React.createContext<IAuthContext | undefined>(undefined);
@@ -25,6 +38,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = (form: AuthForm) => auth.register(form).then(setUser);
 
   const logout = () => auth.logout().then(() => setUser(null));
+  // 加载页面的时候去调用，保证登录刷新页面的时候，不会又被登出了，持久化登录
+  useMount(() => {
+    bootstrapUser().then(setUser);
+  })
 
   return (
     // 如果上面的React.createContext 不写上传递泛型，这里就会出现类型报错，不能分配类型undefined
