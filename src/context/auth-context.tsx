@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   })
 
   return (
-    // 如果上面的React.createContext 不写上传递泛型，这里就会出现类型报错，不能分配类型undefined
+    // 如果上面的React.createContext 不写上传递泛型，这里就会出现类型报错，不能分配类型undefined，ts导致多出的部分，当时写React.createContext 可能不会注意到需要写，写到这里的时候回过头去想哪里类型出问题了
     <AuthContext.Provider value={{ user, login, register, logout }} children={children} />
   )
 }
