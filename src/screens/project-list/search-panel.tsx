@@ -1,3 +1,4 @@
+import { Input, Select } from "antd";
 import React from "react";
 
 export interface User {
@@ -30,7 +31,7 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
     <div>
       {/*setParam(Object.assign({}, param, {name:evt.target.value}))*/}
       {/* 不明白这里为什么要使用...param,这里param数据类型是引用类型，需要先拷贝一份，看写的笔记里面详细写了，在笔记前面第三个菜单的位置带了**号地方 */}
-      <input
+      <Input
         type="text"
         value={param.name}
         onChange={(e) =>
@@ -40,7 +41,7 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
           })
         }
       />
-      <select
+      <Select
         value={param.personId}
         onChange={handleSelect}
       >
@@ -53,7 +54,7 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
         {users.map((item, index) => 
            <option value={item.id}>{item.name}</option>
         )}
-      </select>
+      </Select>
     </div>
   );
 };

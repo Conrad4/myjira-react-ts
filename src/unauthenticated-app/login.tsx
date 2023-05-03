@@ -1,6 +1,6 @@
+import { Button, Form, Input } from "antd";
 import { useAuth } from "context/auth-context";
 import React, { FormEvent, useState } from "react";
-const apiUrl = process.env.REACT_APP_API_URL;
 
 // interface LoginFormProps {
 //   onSubmit: (username: string, password: string) => void;
@@ -8,33 +8,29 @@ const apiUrl = process.env.REACT_APP_API_URL;
 // interface和type区别是什么？
 export const LoginScreen = () => {
   const { login, user } = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    login({ username, password });
-  }
+  // { username: string; password: string } 这里是antd form.item name设计好的ts类型，直接写values就可以拿到对应的
+  const handleSubmit = (values: { username: string; password: string }) => {
+    login(values);
+  };
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="username">用户名</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">密码</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </div>
-      <button type={"submit"}>登录</button>
-    </form>
+    <Form onFinish={handleSubmit}>
+      <Form.Item
+        name={"username"}
+        rules={[{ required: true, message: "请输入用户名" }]}
+      >
+        <Input placeholder={"用户名"} type="text" id={"username"} />
+      </Form.Item>
+      <Form.Item
+        name={"password"}
+        rules={[{ required: true, message: "请输入密码" }]}
+      >
+        <Input placeholder={"密码"} type="password" id={"password"} />
+      </Form.Item>
+      <Form.Item>
+        <Button htmlType={"submit"} type={"primary"}>
+          登录
+        </Button>
+      </Form.Item>
+    </Form>
   );
 }
