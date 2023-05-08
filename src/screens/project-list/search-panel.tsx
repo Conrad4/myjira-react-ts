@@ -1,4 +1,6 @@
-import { Input, Select } from "antd";
+/** @jsx jsx */
+import { jsx } from "@emotion/react";
+import { Form, Input, Select } from "antd";
 import React from "react";
 
 export interface User {
@@ -28,33 +30,37 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
     });
   }
   return (
-    <div>
+    <Form style={{ marginBottom: "2rem" }} layout={"inline"}>
       {/*setParam(Object.assign({}, param, {name:evt.target.value}))*/}
       {/* 不明白这里为什么要使用...param,这里param数据类型是引用类型，需要先拷贝一份，看写的笔记里面详细写了，在笔记前面第三个菜单的位置带了**号地方 */}
-      <Input
-        type="text"
-        value={param.name}
-        onChange={(e) =>
-          setParam({
-            ...param,
-            name: e.target.value,
-          })
-        }
-      />
-      <Select
-        value={param.personId}
-        onChange={handleSelect}
-      >
-        <option value={""}>负责人</option>
-        {/* 这里map后面不能写大括号，或者写了大括号就要写return，这是map函数的原因  */}
-        {/* {users.map((item, index) => {
+      <Form.Item>
+        <Input
+          type="text"
+          value={param.name}
+          onChange={(e) =>
+            setParam({
+              ...param,
+              name: e.target.value,
+            })
+          }
+        />
+      </Form.Item>
+      <Form.Item>
+        <Select
+          value={param.personId}
+          onChange={handleSelect}
+        >
+          <option value={""}>负责人</option>
+          {/* 这里map后面不能写大括号，或者写了大括号就要写return，这是map函数的原因  */}
+          {/* {users.map((item, index) => {
           return <option value={item.id}>{item.name}</option>
         })} */}
 
-        {users.map((item, index) => 
-           <option value={item.id}>{item.name}</option>
-        )}
-      </Select>
-    </div>
+          {users.map((item, index) =>
+            <option value={item.id}>{item.name}</option>
+          )}
+        </Select>
+      </Form.Item>
+    </Form>
   );
 };

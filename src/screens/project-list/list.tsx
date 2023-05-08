@@ -2,7 +2,9 @@ import React from "react";
 import { User } from "./search-panel";
 import { Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
+import dayjs from "dayjs";
 interface Project {
+  created: number;
   id: string;
   name: string;
   personId: string;
@@ -29,9 +31,20 @@ export const List = ({ list, users }: ListProps) => {
         </span>
       );
     },
-  }]
+  }, {
+    title: "创建时间",
+    render(value, project) {
+      return (
+        <span>
+          {project.created
+            ? dayjs(project.created).format("YYYY-MM-DD")
+            : "无"}
+        </span>
+      );
+    },
+  },]
   return (
-    <Table columns={columns} dataSource={list}>
+    <Table rowKey={'id'} columns={columns} dataSource={list}>
     </Table>
   );
 };
