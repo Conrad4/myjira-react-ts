@@ -6,7 +6,7 @@ import qs from 'qs'
 import { cleanObject, useDebounce, useMount } from "utils";
 import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
-const apiUrl = process.env.REACT_APP_API_URL;
+import { useProjects } from "utils/project";
 
 export const ProjectListScreen = () => {
   //   选择框一个state,还用来下面的list的，
@@ -17,42 +17,15 @@ export const ProjectListScreen = () => {
     personId: "",
   });
   const debouncedParam = useDebounce(param, 2000)
+  const { isLoading, data: list } = useProjects(debouncedParam);
   // 下面的展示数据
-  const [list, setList] = useState([]);
-  const client = useHttp();
-  // useEffect(async () => {
-  //   const res = await client('projects', { data: cleanObject(debouncedParam) })
-  //   setList(res);
-  // })
-  useEffect(() => {
-    client("projects", { data: cleanObject(debouncedParam) })
-      .then((response) => {
-        setList(response);
-      });
-  }, [debouncedParam]);
+  // 想想如果在useEffect是async 该怎么写？
 
-
-  // // const [param, setParam] = useDebounce()
-  // useEffect(() => {
-  //   fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(
-  //     async (response) => {
-  //       if (response.ok) {
-  //         setList(await response.json()  );
-  //       }
-  //     }
-  //   );
-  // }, [debouncedParam]);
-
-  useMount(() => {
-    client('users')
-      .then((res) => {
-        return setUsers(res);
-      })
-  });
   return (
     <Container>
       <SearchPanel users={users} param={param} setParam={setParam} />
-      <List users={users} list={list} />
+      {/* 由于List组件那边的函数参数改变了 list={list} 改成Table 组件 tableProps对应的属性，dataSource就是tableProps里面的属性  */}
+      <List loading={isLoading} users={users} dataSource={list || []} />
     </Container>
   );
 };

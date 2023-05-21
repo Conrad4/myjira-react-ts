@@ -34,12 +34,12 @@ export const AuthenticatedApp = () => {
             overlay={
               <Menu>
                 <Menu.Item key={"logout"}>
-                  <a onClick={logout}>登出</a>
+                  <div onClick={logout}>登出</div>
                 </Menu.Item>
               </Menu>
             }
           >
-            <a onClick={(e) => e.preventDefault()}>Hi, {user?.name}</a>
+            <div onClick={(e) => e.preventDefault()}>Hi, {user?.name}</div>
           </Dropdown>
         </HeaderRight>
       </Header>
