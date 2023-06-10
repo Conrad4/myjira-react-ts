@@ -15,7 +15,6 @@ interface IAuthContext {
   register: (form: AuthForm) => Promise<void>;
   logout: () => Promise<void>;
 }
-
 const bootstrapUser = async () => {
   let user;
   const token = auth.getToken();

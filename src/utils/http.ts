@@ -43,13 +43,15 @@ export const http = async (endpoint: string, { data, token, headers, ...customCo
 /**
  * 应该是不能写成 ((endpoint, config): Parameters<typeof http>) ，需要写成元组的形式配合ts的Parameters，用鼠标左键可以点击进去，看api介绍，使用，然后加上...是为了在调用的时候，可以不用写[a,b]，使用了...，可以直接使用(a, b)
  * 为什么它一定要是个hook呢？如果你的函数里需要使用其他的hook的话，那么你的函数本身就必须是一个hook。
- * @returns 
+ * 
+ * @returns * return 返回的函数则是一个封装了用户 token 处理逻辑的 HTTP 请求函数，可以直接传入 endpoint 和 config 参数，方便在组件中调用 API。
  */
 export const useHttp = () => {
   const { user } = useAuth();
   /**
    * utility type 的用法：用泛型给它传入一个其他类型，然后utility type Parameters 对这个类型进行某种操作
    * 这里如果只是用了TS 特殊的utility type，目的就是为了不用去上面找http [endpoint, config]的类型，而是通过utility type Parameters 去推断出来，然后直接使用，原本写法可能是 ([endpoint, config]: [string, IConfig]) => http(endpoint, { ...config, token: user?.token });
+   * 函数作为返回值，这是不是闭包？ yes
    */
   return (...[endpoint, config]: Parameters<typeof http>) =>
     http(endpoint, { ...config, token: user?.token });
