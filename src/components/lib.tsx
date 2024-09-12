@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
-
+import React from "react";
+import { Spin, Typography } from "antd";
+// import { DevTools } from "jira-dev-tool";
 /**
  * 这里泛型，感觉不写也可以，写上ts类型约束是为了更好减少风险和报错  
  * M: 相当于也是类似 将css布局自定义成一个函数式的组件，css in js，可以像函数组件通过props，传入实参 参数等
@@ -25,3 +27,21 @@ export const Row = styled.div<{
         : undefined};
   }
 `;
+const FullPage = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const FullPageLoading = () => (
+  <FullPage>
+    <Spin size={"large"} />
+  </FullPage>
+);
+
+export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
+  <FullPage>
+    <Typography.Text type={"danger"}>{error?.message}</Typography.Text>
+  </FullPage>
+);

@@ -4,6 +4,8 @@ import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-panel";
 import { http } from "utils/http";
 import { useMount } from 'utils';
+import { useAsync } from "utils/useAsyncT";
+import { FullPageErrorFallback, FullPageLoading } from "components/lib";
 
 interface AuthForm {
   username: string;
@@ -30,7 +32,9 @@ const AuthContext = React.createContext<IAuthContext | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // useState这里需要传入一个泛型，会看init值 null，然后把init值赋给泛型，下面的函数参数不希望是null，这里传入的是User | null，要不然null 在下面的then里 user参数类型会报错
   // 感觉这里和useState的泛型有关系，并且下面的函数参数用到了这个user相关
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const { data: user, isLoading, isIdle,
+    isError, error, run, setData: setUser } = useAsync<User | null>();
 
   // const login = (form: AuthForm) => auth.login(form).then(setUser); user参数相同可以消掉，可以只写setUser，但是觉得奇怪
   const login = (form: AuthForm) => auth.login(form).then(user => setUser(user));
@@ -39,9 +43,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => auth.logout().then(() => setUser(null));
   // 加载页面的时候去调用，保证登录刷新页面的时候，不会又被登出了，持久化登录
   useMount(() => {
-    bootstrapUser().then(setUser);
+    run(bootstrapUser())
   })
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
 
+  if (isError) {
+    return <FullPageErrorFallback error={error} />;
+  }
   return (
     // 如果上面的React.createContext 不写上传递泛型，这里就会出现类型报错，不能分配类型undefined，ts导致多出的部分，当时写React.createContext 可能不会注意到需要写，写到这里的时候回过头去想哪里类型出问题了
     <AuthContext.Provider value={{ user, login, register, logout }} children={children} />
